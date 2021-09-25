@@ -1,0 +1,16 @@
+{
+  "name": "fronius-solar",
+  "version": "1.0.0",
+  "description": "fronius-solar",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "influxdb-v2": "^1.0.0",
+    "node-fetch": "^2.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BolverBlitz",
+  "license": "MIT"
+}

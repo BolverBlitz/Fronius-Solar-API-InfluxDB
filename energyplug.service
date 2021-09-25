@@ -1,0 +1,16 @@
+[Unit]
+Description=Fronius-Solar Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+StartLimitBurst=50
+StartLimitIntervalSec=10
+User=pi
+ExecStart=node //Your Path
+
+[Install]
+WantedBy=multi-user.target
