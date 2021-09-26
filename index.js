@@ -13,7 +13,6 @@ const db = new Influxdb({
 async function writeNewDataPoint() {
 	const res = await fetch(`http://${process.env.Fronius_IP}/solar_api/v1/GetInverterRealtimeData.cgi?Scope=System`);
 	const data = await res.json();
-    //console.log(data)
 	await db.write(
 	{
 		org: process.env.Database_Orga,
@@ -26,9 +25,9 @@ async function writeNewDataPoint() {
 			fields:
 			{
 				power: data.Body.Data.PAC.Values[1],
-                wh_day: data.Body.Data.DAY_ENERGY[1],
-                wh_year: data.Body.Data.YEAR_ENERGY[1],
-                wh_total: data.Body.Data.TOTAL_ENERG[1]
+                wh_day: data.Body.Data.DAY_ENERGY.Values[1],
+                wh_year: data.Body.Data.YEAR_ENERGY.Values[1],
+                wh_total: data.Body.Data.TOTAL_ENERGY.Values[1]
 			},
 	}]
 	);
