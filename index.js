@@ -1,6 +1,11 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
 const Influxdb = require('influxdb-v2');
+const GlobalClouter = {
+	Fail: 0,
+	Timeout: 0,
+	Succsess: 0
+}
 
 /* Create InfluxClient */
 const db = new Influxdb({
@@ -35,9 +40,20 @@ async function writeNewDataPoint() {
 
 function gather_and_save_data ()
 {
-	writeNewDataPoint().catch(error => {
-		console.error('\nAn error occurred!', error);
+	writeNewDataPoint().then(function(Check) {
+		GlobalClouter.Succsess++
+	}).catch(error => {
+		if(error.code === 'ETIMEDOUT'){
+			GlobalClouter.Timeout++
+			console.error(`Timeout to Solar API: ${process.env.Fronius_IP} | Stats: Succsess: ${GlobalClouter.Succsess} / Timeouts: ${GlobalClouter.Timeout} / Fails: ${GlobalClouter.Fail}`);
+		}else{
+			GlobalClouter.Fail++
+			console.error(`Stats: Succsess: ${GlobalClouter.Succsess} / Timeouts: ${GlobalClouter.Timeout} / Fails: ${GlobalClouter.Fail}`);
+			console.error('An error occurred!', error);
+		}
+		
+		
 	});
 }
 
-setInterval(gather_and_save_data, 1000);
+setInterval(gather_and_save_data, 5000);
