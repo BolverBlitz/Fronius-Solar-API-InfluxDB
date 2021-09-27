@@ -42,6 +42,7 @@ function gather_and_save_data ()
 {
 	writeNewDataPoint().then(function(Check) {
 		GlobalClouter.Succsess++
+		console.info(`Stats: Succsess: ${GlobalClouter.Succsess} / Timeouts: ${GlobalClouter.Timeout} / Fails: ${GlobalClouter.Fail}`);
 	}).catch(error => {
 		if(error.code === 'ETIMEDOUT'){
 			GlobalClouter.Timeout++
