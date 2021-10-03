@@ -24,6 +24,28 @@ async function writeNewDataPoint() {
 	const Inv_Realtime_V_data = await Inv_Realtime_V_res.json();
 	const Inv_Realtime_DC_data = await Inv_Realtime_DC_res.json();
 	const Inv_Day_Peaks_data = await Inv_Day_Peaks_res.json();
+
+	if(Object.keys(Inv_Realtime_V_data.Body.Data).length === 0){
+		Inv_Realtime_V_data.Body.Data = {
+			IAC_L1: {Value: 0},
+			IAC_L2: {Value: 0},
+			IAC_L3: {Value: 0},
+			UAC_L1: {Value: 0},
+			UAC_L2: {Value: 0},
+			UAC_L3: {Value: 0}
+		}
+	}
+
+	if(Object.keys(Inv_Realtime_DC_data.Body.Data).length === 4){
+		Inv_Realtime_DC_data.Body.Data = {
+			FAC: {Value: 0},
+			IAC: {Value: 0},
+			IDC: {Value: 0},
+			UAC: {Value: 0},
+			UDC: {Value: 0}
+		}
+	}
+
 	await db.write(
 	{
 		org: process.env.Database_Orga,
@@ -39,20 +61,20 @@ async function writeNewDataPoint() {
                 wh_day: Inv_Realtime_data.Body.Data.DAY_ENERGY.Values[1],
                 wh_year: Inv_Realtime_data.Body.Data.YEAR_ENERGY.Values[1],
                 wh_total: Inv_Realtime_data.Body.Data.TOTAL_ENERGY.Values[1],
-				I_AC_L1: Inv_Realtime_V_data.Body.Data.IAC_L1.Value || 0,
-				I_AC_L2: Inv_Realtime_V_data.Body.Data.IAC_L2.Value || 0,
-				I_AC_L3: Inv_Realtime_V_data.Body.Data.IAC_L3.Value || 0,
-				U_AC_L1: Inv_Realtime_V_data.Body.Data.UAC_L1.Value || 0,
-				U_AC_L2: Inv_Realtime_V_data.Body.Data.UAC_L2.Value || 0,
-				U_AC_L3: Inv_Realtime_V_data.Body.Data.UAC_L3.Value || 0,
-				F_AC_All: Inv_Realtime_DC_data.Body.Data.FAC.Value || 0,
-				I_AC_All: Inv_Realtime_DC_data.Body.Data.IAC.Value || 0,
-				I_DC_All: Inv_Realtime_DC_data.Body.Data.IDC.Value || 0,
-				U_AC_All: Inv_Realtime_DC_data.Body.Data.UAC.Value || 0,
-				U_DC_All: Inv_Realtime_DC_data.Body.Data.UDC.Value || 0,
-				Peak_Day_P_AC: Inv_Day_Peaks_data.Body.Data.DAY_PMAX.Value || 0,
-				Peak_Day_V_AC: Inv_Day_Peaks_data.Body.Data.DAY_UACMAX.Value || 0,
-				Peak_Day_V_DC: Inv_Day_Peaks_data.Body.Data.DAY_UDCMAX.Value || 0
+				I_AC_L1: Inv_Realtime_V_data.Body.Data.IAC_L1.Value,
+				I_AC_L2: Inv_Realtime_V_data.Body.Data.IAC_L2.Value,
+				I_AC_L3: Inv_Realtime_V_data.Body.Data.IAC_L3.Value,
+				U_AC_L1: Inv_Realtime_V_data.Body.Data.UAC_L1.Value,
+				U_AC_L2: Inv_Realtime_V_data.Body.Data.UAC_L2.Value,
+				U_AC_L3: Inv_Realtime_V_data.Body.Data.UAC_L3.Value,
+				F_AC_All: Inv_Realtime_DC_data.Body.Data.FAC.Value,
+				I_AC_All: Inv_Realtime_DC_data.Body.Data.IAC.Value,
+				I_DC_All: Inv_Realtime_DC_data.Body.Data.IDC.Value,
+				U_AC_All: Inv_Realtime_DC_data.Body.Data.UAC.Value,
+				U_DC_All: Inv_Realtime_DC_data.Body.Data.UDC.Value,
+				Peak_Day_P_AC: Inv_Day_Peaks_data.Body.Data.DAY_PMAX.Value,
+				Peak_Day_V_AC: Inv_Day_Peaks_data.Body.Data.DAY_UACMAX.Value,
+				Peak_Day_V_DC: Inv_Day_Peaks_data.Body.Data.DAY_UDCMAX.Value
 			},
 	}]
 	);
